@@ -1,0 +1,72 @@
+[
+  {
+    "type": "collision",
+    "keywords": ["fall", "floor", "platform", "wall", "through", "collider"],
+    "causes": [
+      "Missing collider",
+      "Thin collision boundary",
+      "Incorrect physics layer"
+    ],
+    "fixes": [
+      "Check collider placement",
+      "Increase collider thickness",
+      "Verify physics layers"
+    ]
+  },
+  {
+    "type": "animation",
+    "keywords": ["animation", "t pose", "frozen", "animator"],
+    "causes": [
+      "Broken animation state",
+      "Missing transition",
+      "Wrong parameters"
+    ],
+    "fixes": [
+      "Check animator transitions",
+      "Verify animation clips",
+      "Debug animation states"
+    ]
+  },
+  {
+    "type": "audio",
+    "keywords": ["sound", "audio", "music", "volume"],
+    "causes": [
+      "Audio disabled",
+      "Missing file",
+      "Volume issue"
+    ],
+    "fixes": [
+      "Check audio source",
+      "Verify files",
+      "Check volume settings"
+    ]
+  },
+  {
+    "type": "ui",
+    "keywords": ["ui", "menu", "button", "health", "screen"],
+    "causes": [
+      "UI hidden",
+      "Layer issue",
+      "Scaling problem"
+    ],
+    "fixes": [
+      "Check UI layers",
+      "Fix anchors",
+      "Adjust scaling"
+    ]
+  },
+  {
+    "type": "crash",
+    "keywords": ["crash", "freeze", "error", "loading"],
+    "causes": [
+      "Missing asset",
+      "Null reference",
+      "Memory issue"
+    ],
+    "fixes": [
+      "Check logs",
+      "Validate assets",
+      "Handle exceptions"
+    ]
+  }
+]
