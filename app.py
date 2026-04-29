@@ -1,81 +1,45 @@
-import streamlit as st
-from logic_utils import (
-    generate_secret_number,
-    parse_guess,
-    check_guess,
-    calculate_score,
-    reset_game,
-)
+from glitch_analyzer import analyze_glitch
+from evaluator import run_evaluation
 
-st.set_page_config(page_title="Number Guessing Game")
+def main():
+    print(" Game Glitch Investigator (Applied AI System)\n")
 
-st.title("Number Guessing Game")
-st.write("Try to guess the secret number between 1 and 100.")
+    while True:
+        print("\nMenu:")
+        print("1. Analyze a glitch")
+        print("2. Run reliability tests")
+        print("3. Exit")
 
-# FIX: Initialized all session state values clearly so the game behaves consistently.
-if "secret_number" not in st.session_state:
-    st.session_state.secret_number = generate_secret_number()
-if "attempts" not in st.session_state:
-    st.session_state.attempts = 0
-if "score" not in st.session_state:
-    st.session_state.score = 100
-if "game_over" not in st.session_state:
-    st.session_state.game_over = False
-if "history" not in st.session_state:
-    st.session_state.history = []
+        choice = input("Choose an option: ")
 
-st.subheader("Game Status")
-st.write(f"Attempts: {st.session_state.attempts}")
-st.write(f"Score: {st.session_state.score}")
+        if choice == "1":
+            report = input("\nDescribe the game glitch:\n> ")
 
-guess_input = st.text_input("Enter your guess:")
+            result = analyze_glitch(report)
 
-col1, col2 = st.columns(2)
+            print("\n--- AI RESULT ---")
+            print(f"Glitch Type: {result['glitch_type']}")
+            print(f"Confidence: {result['confidence']}")
 
-with col1:
-    if st.button("Submit Guess"):
-        # FIXME: Input parsing was previously unsafe in buggy versions.
-        # FIX: Refactored parsing and guess checking into logic_utils.py using AI help,
-        # then manually reviewed and simplified the logic.
-        guess = parse_guess(guess_input)
+            print("\nLikely Causes:")
+            for cause in result["likely_causes"]:
+                print(f"- {cause}")
 
-        if st.session_state.game_over:
-            st.warning("The game is already over. Click 'Play Again' to start a new round.")
+            print("\nSuggested Fixes:")
+            for fix in result["suggested_fixes"]:
+                print(f"- {fix}")
 
-        elif guess is None:
-            st.error("Please enter a valid whole number.")
+            print(f"\nGuardrail: {result['guardrail']}")
 
-        elif guess < 1 or guess > 100:
-            st.warning("Your guess must be between 1 and 100.")
+        elif choice == "2":
+            run_evaluation()
+
+        elif choice == "3":
+            print("Goodbye 👋")
+            break
 
         else:
-            st.session_state.attempts += 1
-            result = check_guess(guess, st.session_state.secret_number)
-            st.session_state.history.append((guess, result))
-            st.session_state.score = calculate_score(st.session_state.attempts)
+            print("Invalid option.")
 
-            if result == "Too Low":
-                st.info("Too Low")
-            elif result == "Too High":
-                st.info("Too High")
-            elif result == "Correct":
-                st.success(f"Correct. The secret number was {st.session_state.secret_number}.")
-                st.session_state.game_over = True
-
-with col2:
-    if st.button("Play Again"):
-        # FIX: Reset logic moved into logic_utils.py so state resets cleanly every round.
-        new_state = reset_game()
-        st.session_state.secret_number = new_state["secret_number"]
-        st.session_state.attempts = new_state["attempts"]
-        st.session_state.score = new_state["score"]
-        st.session_state.game_over = new_state["game_over"]
-        st.session_state.history = new_state["history"]
-        st.success("New game started.")
-
-st.subheader("Guess History")
-if st.session_state.history:
-    for i, (guess, result) in enumerate(st.session_state.history, start=1):
-        st.write(f"{i}. Guess: {guess} -> {result}")
-else:
-    st.write("No guesses yet.")
+if __name__ == "__main__":
+    main()
